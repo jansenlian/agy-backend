@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.util.service.gitlab.mapper.GitLabProjectMapper">
+    <resultMap id="BaseResultMap" type="com.greatmap.agy.util.service.gitlab.entity.GitLabProject">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="description" property="description"/>
+        <result column="name" property="name"/>
+        <result column="path_with_namespace" property="pathWithNamespace"/>
+        <result column="default_branch" property="defaultBranch"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="http_url_to_repo" property="httpUrlToRepo"/>
+        <result column="last_activity_at" property="lastActivityAt"/>
+        <result column="is_active" property="isActive"/>
+    </resultMap>
+</mapper>

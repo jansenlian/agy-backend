@@ -1,0 +1,49 @@
+server:
+  port: 9202
+  shutdown: graceful
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: agy-util
+  mvc:
+    servlet:
+      load-on-startup: 1
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  file:
+    path: /data/agy/log/${spring.application.name}
+
+# 框架安全认证配置 (Token 2小时/7天双令牌；RSA 密钥对由 Redis 零配置全自动托管)
+framework:
+  security:
+    token:
+      access-token-ttl: 7200 # 访问令牌有效时长(秒): 7200秒 = 2小时
+      refresh-token-ttl: 604800 # 刷新令牌有效时长(秒): 604800秒 = 7天 (用于无感静默刷新)
+
+# GitLab 资产与代码统计配置
+gitlab:
+  url: ${GITLAB_URL:http://gitlab.example.com:10000/}
+  token: ${GITLAB_TOKEN:glpat-your_gitlab_personal_access_token}
+
+# 企业微信群机器人推送配置
+wechat:
+  webhook:
+    default: ${WECHAT_WEBHOOK_DEFAULT:https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your_wechat_robot_key}
+
+# Swagger 文档在线解析默认地址
+swagger:
+  url: ${SWAGGER_DOC_URL:http://localhost:9202/v3/api-docs}

@@ -1,0 +1,2 @@
+com.greatmap.agy.agent.autoconfigure.AgyAgentAutoConfiguration
+com.greatmap.agy.agent.config.AgyAgentSecurityConfig

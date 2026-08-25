@@ -1,0 +1,37 @@
+server:
+  port: 9200
+  address: 0.0.0.0
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: agy-platform
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    servlet:
+      load-on-startup: 1
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  file:
+    path: /data/${spring.application.name}/log
+
+# 框架安全认证配置 (Token 2小时/7天双令牌；RSA 密钥对由 Redis 零配置全自动托管)
+framework:
+  security:
+    token:
+      access-token-ttl: 7200 # 访问令牌有效时长(秒): 7200秒 = 2小时
+      refresh-token-ttl: 604800 # 刷新令牌有效时长(秒): 604800秒 = 7天 (用于无感静默刷新)

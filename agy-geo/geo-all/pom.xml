@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.greatmap.agy</groupId>
+        <artifactId>agy-geo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>geo-all</artifactId>
+    <name>geo-all</name>
+    <description>GIS空间数据全量工具聚合包 (一键引入 geo-core 拓扑引擎与 geo-dwg CAD 解析能力)</description>
+
+    <dependencies>
+        <!-- 核心基础模块 -->
+        <dependency>
+            <groupId>com.greatmap.agy</groupId>
+            <artifactId>geo-core</artifactId>
+        </dependency>
+
+        <!-- DWG/DXF 模块 -->
+        <dependency>
+            <groupId>com.greatmap.agy</groupId>
+            <artifactId>geo-dwg</artifactId>
+        </dependency>
+    </dependencies>
+</project>

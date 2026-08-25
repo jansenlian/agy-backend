@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: agy-agent-common-test
+
+agy:
+  agent:
+    enabled: true
+    base-url: https://api.deepseek.com
+    api-key: test-mock-key
+    model-name: deepseek-chat
+    temperature: 0.7
+    max-messages: 10
+    memory-store-type: JVM

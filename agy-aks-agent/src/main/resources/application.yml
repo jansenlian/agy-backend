@@ -1,0 +1,84 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: agy-aks-agent
+  # 多数据源动态配置 (Baomidou Dynamic DataSource)
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      hikari:
+        minimum-idle: 10
+        idle-timeout: 180000
+        maximum-pool-size: 30
+        max-lifetime: 1800000
+        connection-timeout: 60000
+        connection-test-query: SELECT 1
+      datasource:
+        # 主业务数据源 (aks 耕地业务主库)
+        master:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: org.postgresql.Driver
+          url: ${DB_AKS_URL:jdbc:postgresql://localhost:5432/aks?useSSL=false}
+          username: ${DB_AKS_USERNAME:aks}
+          password: ${DB_AKS_PASSWORD:postgres}
+        # 空间数据源 (sde2 空间与图斑库)
+        sde:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: org.postgresql.Driver
+          url: ${DB_SDE_URL:jdbc:postgresql://localhost:5432/sde2?currentSchema=public}
+          username: ${DB_SDE_USERNAME:postgres}
+          password: ${DB_SDE_PASSWORD:postgres}
+
+# 空间数据库配置 (GeoDB)
+geodb:
+  host: ${GEODB_HOST:localhost}
+  port: ${GEODB_PORT:5432}
+  schema: ${GEODB_SCHEMA:public}
+  username: ${GEODB_USERNAME:postgres}
+  password: ${GEODB_PASSWORD:postgres}
+  database: ${GEODB_NAME:sde2}
+
+# ArcGIS 服务配置
+arcgis:
+  service:
+    httb: ${ARCGIS_HTTB:httb}
+    xztb: ${ARCGIS_XZTB:xztb}
+    gyd: ${ARCGIS_GYD:gyd}
+
+# MyBatis-Plus 持久层配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# AGY 智能体业务配置 (四大介质全部由 common 底座管理，业务工程保持最简)
+agy:
+  agent:
+    enabled: true
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+    api-key: ${DEEPSEEK_API_KEY:your_deepseek_api_key_here}
+    model-name: ${DEEPSEEK_MODEL:deepseek-chat}
+    temperature: 0.5
+    max-messages: 10
+    # 业务系统按需自由切换: REDIS (默认) / DISK / PGSQL / JVM
+    memory-store-type: REDIS
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+      prefix: "agy:agent:memory:aks:"
+      ttl: 7d
+      timeout: 10s
+    log-requests: false
+    log-responses: false
+
+logging:
+  level:
+    com.greatmap.agy.aks: debug
+    com.greatmap.agy.agent: info
+    com.baomidou.dynamic.datasource: info

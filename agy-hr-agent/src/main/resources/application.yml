@@ -1,0 +1,50 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: agy-hr-agent
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/gaigaizi?useSSL=false&currentSchema=agy_agent}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+agy:
+  agent:
+    enabled: true
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+    api-key: ${DEEPSEEK_API_KEY:your_deepseek_api_key_here}
+    model-name: ${DEEPSEEK_MODEL:deepseek-chat}
+    temperature: 0.5
+    max-messages: 10
+    memory-store-type: REDIS
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+      prefix: "agy:agent:memory:hr:"
+      ttl: 7d
+      timeout: 10s
+    log-requests: false
+    log-responses: false
+
+logging:
+  level:
+    com.greatmap.agy.hr: debug
+    com.greatmap.agy.agent: info

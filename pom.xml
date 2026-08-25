@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.greatmap.agy</groupId>
+    <artifactId>agy-backend</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>agy-backend</name>
+    <description>AGY 企业级智能体与微服务架构全栈后端聚合工程</description>
+
+    <modules>
+        <module>agy-dependencies</module>
+        <module>agy-common</module>
+        <module>agy-agent-common</module>
+        <module>agy-geo</module>
+        <module>agy-platform</module>
+        <module>agy-util</module>
+        <module>agy-aks-agent</module>
+        <module>agy-hr-agent</module>
+        <module>agy-business-demo</module>
+    </modules>
+
+    <properties>
+        <java.version>25</java.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 引入 AGY 全局统一依赖 BOM -->
+            <dependency>
+                <groupId>com.greatmap.agy</groupId>
+                <artifactId>agy-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

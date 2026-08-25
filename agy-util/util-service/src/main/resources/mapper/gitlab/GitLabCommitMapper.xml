@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.util.service.gitlab.mapper.GitLabCommitMapper">
+    <resultMap id="BaseResultMap" type="com.greatmap.agy.util.service.gitlab.entity.GitLabCommit">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="commit_id" property="commitId"/>
+        <result column="title" property="title"/>
+        <result column="message" property="message"/>
+        <result column="committer_name" property="committerName"/>
+        <result column="committer_email" property="committerEmail"/>
+        <result column="committed_date" property="committedDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+</mapper>

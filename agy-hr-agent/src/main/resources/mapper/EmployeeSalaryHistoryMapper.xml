@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.hr.mapper.EmployeeSalaryHistoryMapper">
+
+    <!-- 查询员工近期薪酬实际成本记录 -->
+    <select id="findRecentSalaries" resultType="com.greatmap.agy.hr.entity.EmployeeSalaryHistory">
+        SELECT id, emp_id, emp_name, salary_month, actual_cost
+        FROM employee_salary_history
+        WHERE emp_name = #{nameOrId} OR emp_id = #{nameOrId}
+        ORDER BY salary_month DESC
+        LIMIT 12
+    </select>
+
+</mapper>

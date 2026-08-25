@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.greatmap.agy</groupId>
+        <artifactId>agy-util</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>util-service</artifactId>
+    <name>util-service</name>
+    <description>业务持久层 (Entity, Mapper, ServiceImpl, Flyway PostgreSQL)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.greatmap.agy</groupId>
+            <artifactId>util-api</artifactId>
+        </dependency>
+
+        <!-- 集成 GIS 空间数据全量工具包 (DWG, SHP, GDB) -->
+        <dependency>
+            <groupId>com.greatmap.agy</groupId>
+            <artifactId>geo-all</artifactId>
+        </dependency>
+
+        <!-- 持久层 Starter (Mapper 模块必需依赖，用于触发 SqlSessionFactory 自动绑定) -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- 数据库驱动与 Flyway 迁移 -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <!-- Thymeleaf 模板引擎 (Word 文档渲染) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+    </dependencies>
+</project>

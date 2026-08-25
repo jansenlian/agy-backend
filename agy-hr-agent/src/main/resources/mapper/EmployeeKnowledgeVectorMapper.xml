@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.hr.mapper.EmployeeKnowledgeVectorMapper">
+
+    <!-- 关键字模糊检索知识库 -->
+    <select id="searchByKeyword" resultType="com.greatmap.agy.hr.entity.EmployeeKnowledgeVector">
+        SELECT id, emp_id, emp_name, department, position, knowledge_chunk, embedding, create_time
+        FROM employee_knowledge_vector
+        WHERE knowledge_chunk LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT 5
+    </select>
+
+</mapper>

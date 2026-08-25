@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.greatmap.agy</groupId>
+        <artifactId>agy-util</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>util-api</artifactId>
+    <name>util-api</name>
+    <description>对外服务契约声明包 (DTO, VO, Client, Validation) —— 物理隔离绝对不含 Entity/Mapper</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.greatmap.agy</groupId>
+            <artifactId>agy-common-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

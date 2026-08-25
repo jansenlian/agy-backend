@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.hr.mapper.ServerEnvironmentMapper">
+
+    <!-- 根据项目名称或 IP 查询测试环境服务器 -->
+    <select id="findByProjectOrIp" resultType="com.greatmap.agy.hr.entity.ServerEnvironment">
+        SELECT id, project_name, ip, os, account, password, swagger_url, disk_info
+        FROM server_environment
+        WHERE project_name LIKE CONCAT('%', #{projectName}, '%')
+           OR ip LIKE CONCAT('%', #{projectName}, '%')
+        LIMIT 5
+    </select>
+
+</mapper>

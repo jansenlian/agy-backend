@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGY 企业智能人事与运维资产 360° 问答助手</title>
+    <!-- Marked.js 用于 Markdown 与表格实时渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --sidebar-bg: #161b22;
+            --chat-bg: #0d1117;
+            --card-bg: #21262d;
+            --user-bubble: #1f6feb;
+            --bot-bubble: #1c2128;
+            --border-color: #30363d;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --accent-color: #58a6ff;
+            --code-bg: #111418;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部导航 */
+        header {
+            background-color: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: rgba(56, 139, 253, 0.15);
+            color: var(--accent-color);
+            border: 1px solid rgba(56, 139, 253, 0.4);
+        }
+
+        .header-status {
+            font-size: 13px;
+            color: #3fb950;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3fb950;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #3fb950;
+        }
+
+        /* 聊天消息区 */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message-row.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar.user {
+            background-color: var(--user-bubble);
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .message-row.bot .bubble {
+            background-color: var(--bot-bubble);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .message-row.user .bubble {
+            background-color: var(--user-bubble);
+            color: #ffffff;
+            border-top-right-radius: 2px;
+        }
+
+        /* Markdown 样式修饰 */
+        .bubble table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .bubble th, .bubble td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .bubble th {
+            background-color: var(--card-bg);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .bubble tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .bubble pre {
+            background-color: var(--code-bg);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .bubble code {
+            font-family: "JetBrains Mono", Consolas, monospace;
+            font-size: 13px;
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .bubble pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .bubble ul, .bubble ol {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .bubble h1, .bubble h2, .bubble h3, .bubble h4 {
+            margin: 12px 0 6px 0;
+            color: var(--text-main);
+        }
+
+        .bubble p {
+            margin: 6px 0;
+        }
+
+        /* 快捷推荐问题 */
+        .quick-prompts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .prompt-chip {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prompt-chip:hover {
+            background-color: rgba(88, 166, 255, 0.15);
+            border-color: var(--accent-color);
+        }
+
+        /* 底部输入框 */
+        footer {
+            background-color: var(--sidebar-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+
+        .input-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .send-btn {
+            background-color: var(--user-bubble);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .send-btn:hover {
+            opacity: 0.9;
+        }
+
+        .send-btn:disabled {
+            background-color: #30363d;
+            cursor: not-allowed;
+            color: #8b949e;
+        }
+
+        /* 光标闪烁动画 */
+        .typing-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 14px;
+            background-color: var(--accent-color);
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-title">
+        <span>🤖 AGY 智能人事与运维资产 360° 问答助手</span>
+        <span class="badge">DeepSeek-V3 + PGSQL 18</span>
+    </div>
+    <div class="header-status">
+        <div class="status-dot"></div>
+        <span>Agent 实时在线</span>
+    </div>
+</header>
+
+<main id="chatBox">
+    <!-- 欢迎语 -->
+    <div class="message-row bot">
+        <div class="avatar">🤖</div>
+        <div class="bubble">
+            <p><strong>您好！我是 AGY 企业人事与运维资产全景问答智能体。</strong></p>
+            <p>已成功挂载您的 212 位员工全景档案、886 条月度薪酬历史与 12 台测试环境服务器资产。您可以直接用自然语言向我提问：</p>
+            <div class="quick-prompts">
+                <div class="prompt-chip" onclick="quickSend(this.innerText)">查一下王健主管的学历、底薪和负责的项目</div>
+                <div class="prompt-chip" onclick="quickSend(this.innerText)">查一下周绍涛总监的职称和入职时间</div>
+                <div class="prompt-chip" onclick="quickSend(this.innerText)">阿克苏项目的测试环境服务器IP和Swagger地址是多少？</div>
+                <div class="prompt-chip" onclick="quickSend(this.innerText)">帮我找一下机电一体化专业且参与过一码管地项目的同事</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="input-container">
+        <input type="text" id="userInput" class="chat-input" placeholder="输入任何人事档案、薪酬成本或测试服务器资产问题，按回车发送..." autofocus />
+        <button id="sendBtn" class="send-btn" onclick="handleSend()">
+            <span>发送</span>
+            <span>➤</span>
+        </button>
+    </div>
+</footer>
+
+<script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    let isGenerating = false;
+
+    // 回车发送
+    userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
+
+    function quickSend(text) {
+        if (isGenerating) return;
+        userInput.value = text;
+        handleSend();
+    }
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function handleSend() {
+        const text = userInput.value.trim();
+        if (!text || isGenerating) return;
+
+        // 1. 渲染用户问题
+        appendMessage('user', text);
+        userInput.value = '';
+        isGenerating = true;
+        sendBtn.disabled = true;
+
+        // 2. 创建 Bot 占位气泡
+        const botMessageEl = appendMessage('bot', '');
+        const bubbleEl = botMessageEl.querySelector('.bubble');
+        bubbleEl.innerHTML = '<span class="typing-cursor"></span>';
+        scrollToBottom();
+
+        let accumulatedContent = '';
+
+        try {
+            // 3. 发起 SSE 打字机流式请求
+            const url = `/api/agent/chat/stream?message=${encodeURIComponent(text)}&memoryId=web_user_session`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('data:')) {
+                        const jsonStr = trimmed.substring(5).trim();
+                        if (!jsonStr) continue;
+                        try {
+                            const data = JSON.parse(jsonStr);
+                            if (data.delta) {
+                                accumulatedContent += data.delta;
+                                bubbleEl.innerHTML = marked.parse(accumulatedContent) + '<span class="typing-cursor"></span>';
+                                scrollToBottom();
+                            }
+                            if (data.error) {
+                                accumulatedContent += `\n\n> ⚠️ **错误提示**: ${data.error}`;
+                                bubbleEl.innerHTML = marked.parse(accumulatedContent);
+                            }
+                            if (data.finished) {
+                                // 渲染最终完成版 (去除光标)
+                                bubbleEl.innerHTML = marked.parse(accumulatedContent);
+                                scrollToBottom();
+                            }
+                        } catch (e) {
+                            console.error('JSON parse error:', e, jsonStr);
+                        }
+                    }
+                }
+            }
+
+            bubbleEl.innerHTML = marked.parse(accumulatedContent || '（Agent 未输出任何内容）');
+        } catch (err) {
+            console.error('Fetch error:', err);
+            bubbleEl.innerHTML = marked.parse(`> ❌ **网络或推理请求异常**: ${err.message}`);
+        } finally {
+            isGenerating = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+            scrollToBottom();
+        }
+    }
+
+    function appendMessage(role, rawContent) {
+        const row = document.createElement('div');
+        row.className = `message-row ${role}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = `avatar ${role}`;
+        avatar.innerText = role === 'user' ? '👤' : '🤖';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        if (role === 'user') {
+            bubble.innerText = rawContent;
+        } else if (rawContent) {
+            bubble.innerHTML = marked.parse(rawContent);
+        }
+
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        chatBox.appendChild(row);
+        scrollToBottom();
+        return row;
+    }
+</script>
+
+</body>
+</html>

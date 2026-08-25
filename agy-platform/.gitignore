@@ -1,0 +1,13 @@
+# Target & Build Output
+**/target/
+**/dist/
+
+# IDE & OS Files
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Frontend Dependencies
+**/node_modules/
+*.local

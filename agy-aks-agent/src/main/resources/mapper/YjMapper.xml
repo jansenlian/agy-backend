@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.aks.mapper.YjMapper">
+
+    <select id="selectWarningPage" resultType="com.greatmap.agy.aks.entity.Yj">
+        SELECT
+            id, area_code, area_name, qxdm, qxmc, type, lx, bt, xq,
+            htbh, dkbh, htid, dkid, num, gmt_create, gmt_modified
+        FROM jgpt_yj
+        <where>
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND gmt_create &gt;= #{startTime}::timestamp
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND gmt_create &lt;= #{endTime}::timestamp
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (bt LIKE CONCAT('%', #{keyword}, '%') OR xq LIKE CONCAT('%', #{keyword}, '%') OR htbh LIKE CONCAT('%', #{keyword}, '%') OR dkbh LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY gmt_create DESC
+    </select>
+
+    <select id="countWarningGroupByType" resultType="java.util.Map">
+        SELECT
+            type AS warning_type,
+            COUNT(1) AS total_count,
+            CASE
+                WHEN type = '01' THEN '合同到期预警'
+                WHEN type = '02' THEN '地块异常预警'
+                WHEN type = '03' THEN '收缴费用异常预警'
+                WHEN type = '04' THEN '人员信息异常预警'
+                WHEN type = '05' THEN '耕地非粮化预警'
+                ELSE '其他异常预警'
+            END AS type_name
+        FROM jgpt_yj
+        <where>
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY type
+        ORDER BY total_count DESC
+    </select>
+
+    <select id="countWarningGroupByDistrict" resultType="java.util.Map">
+        SELECT
+            COALESCE(area_code, qxdm) AS district_code,
+            MAX(COALESCE(area_name, qxmc, '未知区县')) AS district_name,
+            COUNT(1) AS warning_count,
+            SUM(CASE WHEN type = '01' THEN 1 ELSE 0 END) AS htdq_count,
+            SUM(CASE WHEN type = '02' THEN 1 ELSE 0 END) AS dkyc_count,
+            SUM(CASE WHEN type = '03' THEN 1 ELSE 0 END) AS sjfy_count,
+            SUM(CASE WHEN type = '04' THEN 1 ELSE 0 END) AS ryxx_count,
+            SUM(CASE WHEN type = '05' THEN 1 ELSE 0 END) AS fglh_count
+        FROM jgpt_yj
+        <where>
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY COALESCE(area_code, qxdm)
+        ORDER BY warning_count DESC
+    </select>
+
+</mapper>

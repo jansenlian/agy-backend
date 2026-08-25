@@ -1,0 +1,35 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: dwg-tool
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+# 日志输出目录配置
+logging:
+  file:
+    path: /data/${spring.application.name}/log
+
+# CAD转码配置
+cad:
+  # dwg2dxf可执行程序路径(若在PATH环境变量中可直接写dwg2dxf)
+  dwg2dxf-path: dwg2dxf
+  # 转换超时时间(秒)
+  timeout-seconds: 60
+  # 临时目录
+  temp-dir: ./temp/cad
+
+# SpringDoc OpenAPI配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
+    tags-sorter: alpha
+    operations-sorter: alpha

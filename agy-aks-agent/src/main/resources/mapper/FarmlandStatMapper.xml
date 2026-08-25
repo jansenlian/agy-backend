@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greatmap.agy.aks.mapper.FarmlandStatMapper">
+
+    <!-- 1. 各区县宏观大盘统计 -->
+    <select id="countDistrictMacroOverview" resultType="java.util.Map">
+        SELECT
+            COALESCE(h.area_code, h.qxdm) AS district_code,
+            MAX(COALESCE(h.area_name, h.qxmc, '未知区县')) AS district_name,
+            COUNT(DISTINCT h.htbh) AS total_contracts,
+            COALESCE(SUM(h.htmj_m), 0) AS total_contract_area_mu,
+            COALESCE(SUM(h.cbfyjzehb), 0) AS total_rent_amount,
+            COUNT(DISTINCT d.hcdkbh) AS total_parcels,
+            COALESCE(SUM(d.htmj_m), 0) AS total_parcel_area_mu
+        FROM jgpt_htxx h
+        LEFT JOIN jgpt_dkhc d ON h.htbh = d.htbh AND (d.del_flag = '0' OR d.del_flag IS NULL)
+        <where>
+            (h.del_flag = '0' OR h.del_flag IS NULL)
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (h.area_code = #{areaCode} OR h.qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY COALESCE(h.area_code, h.qxdm)
+        ORDER BY total_contract_area_mu DESC
+    </select>
+
+    <!-- 2. 粮菜作物种植结构统计 -->
+    <select id="countCropPlantingStructure" resultType="java.util.Map">
+        SELECT
+            COALESCE(NULLIF(TRIM(zzlx), ''), NULLIF(TRIM(zzzw), ''), '未申报作物') AS crop_name,
+            COUNT(1) AS parcel_count,
+            COALESCE(SUM(htmj_m), 0) AS total_area_mu,
+            CASE
+                WHEN zzlx LIKE '%小麦%' OR zzlx LIKE '%玉米%' OR zzlx LIKE '%粮%' OR zzzw LIKE '%小麦%' OR zzzw LIKE '%玉米%' OR zzzw LIKE '%粮%' THEN '粮食作物(保障口粮)'
+                WHEN zzlx LIKE '%棉花%' OR zzzw LIKE '%棉花%' THEN '棉花(大宗经济作物)'
+                WHEN zzlx LIKE '%苹果%' OR zzlx LIKE '%红枣%' OR zzlx LIKE '%核桃%' OR zzlx LIKE '%果%' OR zzzw LIKE '%果%' THEN '特色林果(特色经济)'
+                WHEN zzlx LIKE '%菜%' OR zzzw LIKE '%菜%' THEN '蔬菜大棚(菜篮子工程)'
+                ELSE '其他作物/待核实'
+            END AS crop_category
+        FROM jgpt_dkhc
+        <where>
+            (del_flag = '0' OR del_flag IS NULL)
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY COALESCE(NULLIF(TRIM(zzlx), ''), NULLIF(TRIM(zzzw), ''), '未申报作物'),
+                 CASE
+                     WHEN zzlx LIKE '%小麦%' OR zzlx LIKE '%玉米%' OR zzlx LIKE '%粮%' OR zzzw LIKE '%小麦%' OR zzzw LIKE '%玉米%' OR zzzw LIKE '%粮%' THEN '粮食作物(保障口粮)'
+                     WHEN zzlx LIKE '%棉花%' OR zzzw LIKE '%棉花%' THEN '棉花(大宗经济作物)'
+                     WHEN zzlx LIKE '%苹果%' OR zzlx LIKE '%红枣%' OR zzlx LIKE '%核桃%' OR zzlx LIKE '%果%' OR zzzw LIKE '%果%' THEN '特色林果(特色经济)'
+                     WHEN zzlx LIKE '%菜%' OR zzzw LIKE '%菜%' THEN '蔬菜大棚(菜篮子工程)'
+                     ELSE '其他作物/待核实'
+                 END
+        ORDER BY total_area_mu DESC
+    </select>
+
+    <!-- 3. 租金与财务收缴统计 -->
+    <select id="countRentAndFinancialOverview" resultType="java.util.Map">
+        SELECT
+            COALESCE(area_code, qxdm) AS district_code,
+            MAX(COALESCE(area_name, qxmc, '未知区县')) AS district_name,
+            COUNT(1) AS contract_count,
+            COALESCE(SUM(cbfyjzehb), 0) AS total_rent_sum,
+            COALESCE(AVG(cbfjjhb), 0) AS avg_rent_per_mu,
+            COALESCE(MAX(cbfjjhb), 0) AS max_rent_per_mu,
+            COALESCE(MIN(cbfjjhb), 0) AS min_rent_per_mu
+        FROM jgpt_htxx
+        <where>
+            (del_flag = '0' OR del_flag IS NULL)
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY COALESCE(area_code, qxdm)
+        ORDER BY total_rent_sum DESC
+    </select>
+
+    <!-- 4. 合同审核与合规状态统计 -->
+    <select id="countContractAuditStatus" resultType="java.util.Map">
+        SELECT
+            COALESCE(htzt, '0') AS audit_status,
+            COUNT(1) AS status_count,
+            COALESCE(SUM(htmj_m), 0) AS status_area_mu,
+            CASE
+                WHEN htzt = '1' THEN '已生效/审核通过'
+                WHEN htzt = '2' THEN '已终止/已解除'
+                WHEN htzt = '0' OR htzt IS NULL THEN '草拟/待审核'
+                ELSE '其他流转状态'
+            END AS status_desc
+        FROM jgpt_htxx
+        <where>
+            (del_flag = '0' OR del_flag IS NULL)
+            <if test="areaCode != null and areaCode != '' and areaCode != '652900000000'">
+                AND (area_code = #{areaCode} OR qxdm LIKE CONCAT(SUBSTRING(#{areaCode}, 1, 6), '%'))
+            </if>
+        </where>
+        GROUP BY COALESCE(htzt, '0'),
+                 CASE
+                     WHEN htzt = '1' THEN '已生效/审核通过'
+                     WHEN htzt = '2' THEN '已终止/已解除'
+                     WHEN htzt = '0' OR htzt IS NULL THEN '草拟/待审核'
+                     ELSE '其他流转状态'
+                 END
+        ORDER BY status_count DESC
+    </select>
+
+</mapper>

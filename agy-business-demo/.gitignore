@@ -1,0 +1,19 @@
+# Target & Build Output
+**/target/
+**/dist/
+
+# IDE & OS Files
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Node Dependencies & Build Artifacts
+**/node_modules/
+*.tsbuildinfo
+
+# Logs
+*.log
+*.tmp
+logs/
+**/logs/
