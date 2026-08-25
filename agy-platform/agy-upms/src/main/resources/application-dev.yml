@@ -4,7 +4,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/gaigaizi?stringtype=unspecified&currentSchema=public}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/agy_db?stringtype=unspecified&currentSchema=public}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
   data:

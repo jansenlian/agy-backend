@@ -8,7 +8,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/gaigaizi?useSSL=false&currentSchema=agy_agent}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/agy_db?useSSL=false&currentSchema=agy_agent}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     hikari:

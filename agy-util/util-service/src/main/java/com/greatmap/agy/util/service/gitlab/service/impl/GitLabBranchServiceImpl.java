@@ -42,7 +42,7 @@ public class GitLabBranchServiceImpl extends ServiceImpl<GitLabBranchMapper, Git
     private final GitLabCommitService gitLabCommitService;
     private final GitLabProjectService gitLabProjectService;
 
-    @Value("${gitlab.url:http://gitlab.greatmap.com.cn:10000/}")
+    @Value("${gitlab.url:https://gitlab.example.com/}")
     private String gitlabUrl;
 
     @Value("${gitlab.token:}")

@@ -29,7 +29,7 @@ public class WeChatNotifyServiceImpl implements WeChatNotifyService {
 
     private final ObjectMapper objectMapper;
 
-    @Value("${wechat.webhook.default:https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7a9dffcb-4126-4371-8e57-b1e2f318f3e7}")
+    @Value("${wechat.webhook.default:https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your_wechat_robot_key}")
     private String defaultWebhook;
 
     @Override

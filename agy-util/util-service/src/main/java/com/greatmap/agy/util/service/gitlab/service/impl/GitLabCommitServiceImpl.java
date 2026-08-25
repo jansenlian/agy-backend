@@ -38,7 +38,7 @@ public class GitLabCommitServiceImpl extends ServiceImpl<GitLabCommitMapper, Git
 
     private final ObjectMapper objectMapper;
 
-    @Value("${gitlab.url:http://gitlab.greatmap.com.cn:10000/}")
+    @Value("${gitlab.url:https://gitlab.example.com/}")
     private String gitlabUrl;
 
     @Value("${gitlab.token:}")
