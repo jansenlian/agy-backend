@@ -67,4 +67,5 @@ mvn spring-boot:run -pl agy-platform/agy-upms
 - `REDIS_HOST`: Redis 主机地址
 - `REDIS_PASSWORD`: Redis 访问密码
 - `DEEPSEEK_API_KEY`: DeepSeek 大模型 API 密钥
+- `JASYPT_ENCRYPTOR_PASSWORD`: Jasypt 配置文件安全加解密主密钥
 - `GITLAB_TOKEN`: GitLab 访问令牌
