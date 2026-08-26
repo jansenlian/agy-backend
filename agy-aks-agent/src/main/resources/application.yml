@@ -2,6 +2,10 @@ server:
   port: 8092
 
 spring:
+  config:
+    import:
+      - optional:classpath:/application-local.yml
+      - optional:file:./application-local.yml
   application:
     name: agy-aks-agent
   # 多数据源动态配置 (Baomidou Dynamic DataSource)

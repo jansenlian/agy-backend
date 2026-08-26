@@ -1,0 +1,25 @@
+# ===================================================================
+# 本地私有开发运行配置模板 (请复制为 application-local.yml 并填入私有配置)
+# 说明: application-local.yml 已被 .gitignore 忽略，绝不会提交到 Git
+# ===================================================================
+spring:
+  datasource:
+    url: jdbc:postgresql://db.jianjian.cloud:5432/gaigaizi?stringtype=unspecified&currentSchema=public
+    username: gaigaizi
+    password: your_database_password
+  data:
+    redis:
+      host: db.jianjian.cloud
+      port: 6379
+      password: your_redis_password
+      database: 0
+
+# GitLab 资产与代码统计配置
+gitlab:
+  url: http://gitlab.greatmap.com.cn:10000/
+  token: your_gitlab_token
+
+# 企业微信群机器人推送配置
+wechat:
+  webhook:
+    default: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your_webhook_key

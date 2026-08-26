@@ -5,6 +5,10 @@ server:
 spring:
   profiles:
     active: dev
+  config:
+    import:
+      - optional:classpath:/application-local.yml
+      - optional:file:./application-local.yml
   application:
     name: agy-util
   mvc:

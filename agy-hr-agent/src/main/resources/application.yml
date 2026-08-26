@@ -2,6 +2,10 @@ server:
   port: 8090
 
 spring:
+  config:
+    import:
+      - optional:classpath:/application-local.yml
+      - optional:file:./application-local.yml
   application:
     name: agy-hr-agent
   main:

@@ -1,0 +1,39 @@
+# ===================================================================
+# 本地私有开发运行配置模板 (请复制为 application-local.yml 并填入私有配置)
+# 说明: application-local.yml 已被 .gitignore 忽略，绝不会提交到 Git
+# ===================================================================
+spring:
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          url: jdbc:postgresql://192.168.11.197:38000/aks?useSSL=false
+          username: aks
+          password: your_aks_db_password
+        sde:
+          url: jdbc:postgresql://192.168.11.197:38000/sde2?currentSchema=public
+          username: postgres
+          password: your_sde_db_password
+
+geodb:
+  host: 192.168.11.167
+  port: 5432
+  schema: public
+  username: postgres
+  password: your_geodb_password
+  database: sde2
+
+arcgis:
+  service:
+    httb: httb
+    xztb: m650900glsj2024iexztb
+    gyd: gyd
+
+agy:
+  agent:
+    api-key: your_deepseek_api_key
+    redis:
+      host: db.jianjian.cloud
+      port: 6379
+      password: your_redis_password
+      database: 0

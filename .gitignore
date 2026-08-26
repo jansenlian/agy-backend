@@ -34,3 +34,11 @@ logs/
 *.log
 temp/
 /data/
+
+# 本地私有开发环境配置 (含真实密码，严禁提交至 Git)
+*local.yml
+*local.yaml
+*local.properties
+application-local*.yml
+application-local*.yaml
+
