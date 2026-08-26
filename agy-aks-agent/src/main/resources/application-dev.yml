@@ -1,0 +1,39 @@
+# ===================================================================
+# 开发测试环境 (dev) 专属配置：多数据源、GeoDB、Redis 与 DeepSeek Key
+# ===================================================================
+spring:
+  datasource:
+    dynamic:
+      datasource:
+        # 主业务数据源 (aks 耕地业务主库)
+        master:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: org.postgresql.Driver
+          url: ${DB_AKS_URL:jdbc:postgresql://localhost:5432/aks?useSSL=false}
+          username: ${DB_AKS_USERNAME:aks}
+          password: ${DB_AKS_PASSWORD:postgres}
+        # 空间数据源 (sde2 空间与图斑库)
+        sde:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: org.postgresql.Driver
+          url: ${DB_SDE_URL:jdbc:postgresql://localhost:5432/sde2?currentSchema=public}
+          username: ${DB_SDE_USERNAME:postgres}
+          password: ${DB_SDE_PASSWORD:postgres}
+
+# 空间数据库配置 (GeoDB)
+geodb:
+  host: ${GEODB_HOST:localhost}
+  port: ${GEODB_PORT:5432}
+  schema: ${GEODB_SCHEMA:public}
+  username: ${GEODB_USERNAME:postgres}
+  password: ${GEODB_PASSWORD:postgres}
+  database: ${GEODB_NAME:sde2}
+
+agy:
+  agent:
+    api-key: ${DEEPSEEK_API_KEY:your_deepseek_api_key_here}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}

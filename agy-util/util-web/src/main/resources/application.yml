@@ -4,11 +4,7 @@ server:
 
 spring:
   profiles:
-    active: dev
-  config:
-    import:
-      - optional:classpath:/application-local.yml
-      - optional:file:./application-local.yml
+    active: ${SPRING_PROFILES_ACTIVE:local}
   application:
     name: agy-util
   mvc:
@@ -16,11 +12,34 @@ spring:
       load-on-startup: 1
   lifecycle:
     timeout-per-shutdown-phase: 30s
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+framework:
+  security:
+    cors:
+      allow-credentials: true
+      # 开发/本地环境默认允许的前端 Origin
+      allowed-origin-patterns:
+        - "http://localhost:*"
+        - "http://127.0.0.1:*"
+    token:
+      access-token-ttl: 7200 # 访问令牌有效时长(秒): 7200秒 = 2小时
+      refresh-token-ttl: 604800 # 刷新令牌有效时长(秒): 604800秒 = 7天 (用于无感静默刷新)
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   global-config:
     db-config:
       logic-delete-field: delFlag
@@ -30,13 +49,6 @@ mybatis-plus:
 logging:
   file:
     path: /data/agy/log/${spring.application.name}
-
-# 框架安全认证配置 (Token 2小时/7天双令牌；RSA 密钥对由 Redis 零配置全自动托管)
-framework:
-  security:
-    token:
-      access-token-ttl: 7200 # 访问令牌有效时长(秒): 7200秒 = 2小时
-      refresh-token-ttl: 604800 # 刷新令牌有效时长(秒): 604800秒 = 7天 (用于无感静默刷新)
 
 # GitLab 资产与代码统计配置
 gitlab:

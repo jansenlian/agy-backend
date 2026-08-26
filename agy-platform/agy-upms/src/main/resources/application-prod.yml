@@ -13,10 +13,6 @@ spring:
       port: ${SPRING_DATA_REDIS_PORT:${REDIS_PORT:6379}}
       password: ${SPRING_DATA_REDIS_PASSWORD:${REDIS_PASSWORD:}}
       database: ${SPRING_DATA_REDIS_DATABASE:0}
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    locations: classpath:db/migration
 
 springdoc:
   api-docs:
@@ -27,7 +23,6 @@ springdoc:
 framework:
   security:
     cors:
-      allow-credentials: true
       # 生产环境精细化 CORS 跨域安全隔离白名单 (严禁在生产开启 localhost / 127.0.0.1 或带凭据的通配符)
       allowed-origin-patterns:
         - "https://app.greatmap.com"
