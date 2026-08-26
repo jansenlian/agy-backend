@@ -25,10 +25,12 @@ public class AgyJasyptEnvironmentPostProcessor implements EnvironmentPostProcess
         String configKey = environment.getProperty("jasypt.encryptor.password");
 
         String masterKey = (envKey != null && !envKey.isBlank()) ? envKey :
-                ((configKey != null && !configKey.isBlank()) ? configKey : JasyptEncryptorUtil.DEFAULT_MASTER_KEY);
+                ((configKey != null && !configKey.isBlank()) ? configKey : "");
 
         Map<String, Object> defaultProperties = new HashMap<>();
-        defaultProperties.put("jasypt.encryptor.password", masterKey);
+        if (!masterKey.isBlank()) {
+            defaultProperties.put("jasypt.encryptor.password", masterKey);
+        }
         defaultProperties.put("jasypt.encryptor.algorithm", "PBEWithMD5AndDES");
         defaultProperties.put("jasypt.encryptor.iv-generator-classname", "org.jasypt.iv.NoIvGenerator");
         defaultProperties.put("jasypt.encryptor.iv-generator-class-name", "org.jasypt.iv.NoIvGenerator");

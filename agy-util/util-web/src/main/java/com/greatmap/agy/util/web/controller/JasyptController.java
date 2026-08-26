@@ -27,15 +27,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Jasypt加解密工具", description = "用于 Spring Boot 配置文件 ENC(...) 敏感字段的加解密")
 public class JasyptController {
 
-    @Value("${jasypt.encryptor.password:AGY_FRAMEWORK_MASTER_SECRET_KEY_2026}")
+    @Value("${jasypt.encryptor.password:${JASYPT_ENCRYPTOR_PASSWORD:}}")
     private String defaultPassword;
 
     @Operation(summary = "Jasypt 明文加密", description = "使用 Jasypt 对明文进行加密，返回加密字符串")
     @PostMapping("/encode")
     public Result<String> encode(
             @Parameter(description = "明文字符串") @RequestParam String text,
-            @Parameter(description = "密钥/盐(为空则使用系统默认主密钥)") @RequestParam(required = false) String salt) {
+            @Parameter(description = "密钥/盐(为空则使用系统默认环境变量 JASYPT_ENCRYPTOR_PASSWORD)") @RequestParam(required = false) String salt) {
         String pwd = StringUtils.defaultIfBlank(salt, defaultPassword);
+        if (StringUtils.isBlank(pwd)) {
+            return Result.fail("未提供密钥 salt，且系统未配置环境变量 JASYPT_ENCRYPTOR_PASSWORD，无法执行加密");
+        }
         try {
             String ciphertext = JasyptEncryptorUtil.encrypt(text, pwd);
             return Result.success(ciphertext);
@@ -49,8 +52,11 @@ public class JasyptController {
     @PostMapping("/decode")
     public Result<String> decode(
             @Parameter(description = "密文字符串 (支持带或不带 ENC(...))") @RequestParam String text,
-            @Parameter(description = "密钥/盐(为空则使用系统默认主密钥)") @RequestParam(required = false) String salt) {
+            @Parameter(description = "密钥/盐(为空则使用系统默认环境变量 JASYPT_ENCRYPTOR_PASSWORD)") @RequestParam(required = false) String salt) {
         String pwd = StringUtils.defaultIfBlank(salt, defaultPassword);
+        if (StringUtils.isBlank(pwd)) {
+            return Result.fail("未提供密钥 salt，且系统未配置环境变量 JASYPT_ENCRYPTOR_PASSWORD，无法执行解密");
+        }
         try {
             String plaintext = JasyptEncryptorUtil.decrypt(text, pwd);
             return Result.success(plaintext);

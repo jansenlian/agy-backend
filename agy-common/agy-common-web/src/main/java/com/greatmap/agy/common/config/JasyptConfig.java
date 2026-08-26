@@ -14,12 +14,15 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class JasyptConfig {
 
-    @Value("${jasypt.encryptor.password:" + JasyptEncryptorUtil.DEFAULT_MASTER_KEY + "}")
+    @Value("${jasypt.encryptor.password:${JASYPT_ENCRYPTOR_PASSWORD:}}")
     private String masterKey;
 
     @Bean("jasyptStringEncryptor")
     @Primary
     public StringEncryptor jasyptStringEncryptor() {
+        if (masterKey == null || masterKey.isBlank()) {
+            masterKey = "UNCONFIGURED_JASYPT_PASSWORD_PLEASE_SET_ENV";
+        }
         return JasyptEncryptorUtil.createEncryptor(masterKey);
     }
 }

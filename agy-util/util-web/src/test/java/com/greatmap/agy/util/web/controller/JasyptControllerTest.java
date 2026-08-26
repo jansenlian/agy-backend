@@ -15,7 +15,7 @@ class JasyptControllerTest {
     @DisplayName("测试 JasyptController 加密与解密闭环 (验证与 common 统一加密算法一致)")
     void testEncodeAndDecode() {
         JasyptController controller = new JasyptController();
-        ReflectionTestUtils.setField(controller, "defaultPassword", "AGY_FRAMEWORK_MASTER_SECRET_KEY_2026");
+        ReflectionTestUtils.setField(controller, "defaultPassword", "TEST_SECRET_KEY_FOR_CONTROLLER_2026");
 
         String rawText = "MySecretDatabasePassword2026";
         Result<String> encodeRes = controller.encode(rawText, null);
