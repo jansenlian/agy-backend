@@ -39,7 +39,7 @@ class FrameworkArchitectureTest {
     void checkAllControllerMethodsHaveExplicitSecurityDeclaration() throws Exception {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         CachingMetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
-        Resource[] resources = resolver.getResources("classpath*:com/greatmap/agy/web/controller/**/*.class");
+        Resource[] resources = resolver.getResources("classpath*:com/greatmap/agy/**/controller/**/*.class");
 
         List<String> violations = new ArrayList<>();
         int scannedCount = 0;

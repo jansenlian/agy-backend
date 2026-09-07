@@ -6,13 +6,15 @@ import com.greatmap.agy.agent.service.AgyAgentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * AGY 智能体通用 RESTful 与 SSE 流式控制器
- * 开箱即用，支持前端标准 Fetch / EventSource 直连
+ * 显式声明安全意图：需登录认证后方可使用智能体
  */
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("/api/agent")
 @RequiredArgsConstructor
@@ -33,8 +35,12 @@ public class AgyAgentStreamController {
     }
 
     /**
-     * GET 方式 SSE 打字机流式问答接口 (适合浏览器 EventSource 原生调用)
+     * GET 方式 SSE 打字机流式问答接口 (已废弃)
+     *
+     * @deprecated 浏览器原生 EventSource 规范无法自定义 Authorization 请求头，通过 URL 传递 ?token= 存在日志与历史记录泄露隐患。
+     *             推荐统一迁移为 POST /api/agent/chat/stream 并配合前端 fetch + ReadableStream 消费。
      */
+    @Deprecated(since = "1.0.0")
     @GetMapping(value = "/chat/stream", produces = "text/event-stream;charset=UTF-8")
     public SseEmitter chatStreamGet(
             @RequestParam(defaultValue = "default_session") String memoryId,

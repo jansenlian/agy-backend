@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,15 @@ import java.util.Map;
 
 /**
  * Swagger / OpenAPI 接口文档一键导出 Word 控制器
+ * 显式声明安全意图：需登录认证后方可使用
  *
  * @author AGY
  */
 @Slf4j
+@PreAuthorize("isAuthenticated()")
 @Controller
 @RequestMapping("/doc")
-@Tag(name = "Swagger文档导出", description = "Swagger / OpenAPI 接口文档一键转 Word (.docx)")
+@Tag(name = "OpenAPI文档导出", description = "解析 OpenAPI/Swagger JSON 一键渲染并导出 Word 文档")
 @RequiredArgsConstructor
 public class DocExportController {
 

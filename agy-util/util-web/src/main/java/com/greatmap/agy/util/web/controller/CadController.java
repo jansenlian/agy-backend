@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +21,10 @@ import java.util.Set;
 
 /**
  * CAD 空间矢量转换与图斑解析控制器
+ * 显式声明安全意图：需登录认证后方可使用
  */
 @Tag(name = "CAD空间矢量转换接口", description = "提供DWG/DXF文件向标准GeoJSON/WKT矢量图斑解析,拓扑构面及注记属性挂接")
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping("/api/v1/cad")
 @RequiredArgsConstructor
