@@ -13,15 +13,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * GitLab 资产、分支与提交代码统计控制器
+ * 仅限超级管理员或 admin 角色调用
  *
  * @author AGY
  */
+@PreAuthorize("@ss.hasRole('admin')")
 @RestController
 @RequestMapping("/gitlab")
 @Tag(name = "GitLab资产与统计", description = "GitLab 资产同步、分支管理与提交代码量统计接口")

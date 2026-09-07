@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "国密与通用加解密工具接口", description = "提供 SM2/SM3/SM4 及 AES/RSA/MD5 等加解密与摘要计算")
+@PreAuthorize("@ss.hasRole('admin')")
 @RestController
 @RequestMapping("/api/v1/crypto")
 @RequiredArgsConstructor

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 企业微信群机器人消息推送控制器
+ * 仅限超级管理员或 admin 角色调用，防范滥发告警
  *
  * @author AGY
  */
+@PreAuthorize("@ss.hasRole('admin')")
 @RestController
 @RequestMapping("/wechat")
 @Tag(name = "企业微信通知", description = "企业微信群机器人消息与告警推送接口")

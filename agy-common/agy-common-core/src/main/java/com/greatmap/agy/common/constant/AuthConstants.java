@@ -104,4 +104,20 @@ public interface AuthConstants {
      * 单个 IP 每分钟最大登录尝试次数
      */
     int MAX_IP_LOGIN_PER_MINUTE = 30;
+
+    /**
+     * 系统默认放行白名单清单 (无需 Token 认证即可公开访问)
+     */
+    String[] WHITE_LIST = {
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/public-key",
+            "/doc.html",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/webjars/**",
+            "/favicon.ico",
+            "/error"
+    };
 }

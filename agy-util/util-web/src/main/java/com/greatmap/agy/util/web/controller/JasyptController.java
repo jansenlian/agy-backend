@@ -1,6 +1,5 @@
 package com.greatmap.agy.util.web.controller;
 
-import com.greatmap.agy.common.annotation.Anonymous;
 import com.greatmap.agy.common.domain.Result;
 import com.greatmap.agy.common.utils.JasyptEncryptorUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,16 +11,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Jasypt 配置文件安全加解密控制器
  * 统一委托 common 层的 JasyptEncryptorUtil 统一算法加密器，彻底消除算法漂移
+ * 仅限超级管理员或 admin 角色调用，杜绝生产敏感密码越权泄露
  *
  * @author AGY
  */
 @Slf4j
-@Anonymous
+@PreAuthorize("@ss.hasRole('admin')")
 @RestController
 @RequestMapping("/jasypt")
 @Tag(name = "Jasypt加解密工具", description = "用于 Spring Boot 配置文件 ENC(...) 敏感字段的加解密")

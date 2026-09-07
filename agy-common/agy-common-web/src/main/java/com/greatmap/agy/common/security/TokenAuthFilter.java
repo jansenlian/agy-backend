@@ -35,22 +35,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     private final SecurityProperties securityProperties;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    /**
-     * 白名单路径清单（无需 Token 即可访问）
-     */
-    private static final String[] WHITE_LIST = {
-            "/api/auth/login",
-            "/api/auth/refresh",
-            "/api/auth/public-key",
-            "/doc.html",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/webjars/**",
-            "/favicon.ico",
-            "/error"
-    };
-
     public TokenAuthFilter(StringRedisTemplate stringRedisTemplate) {
         this(stringRedisTemplate, new SecurityProperties());
     }
@@ -66,8 +50,8 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        // 1. 白名单直接放行
-        for (String pattern : WHITE_LIST) {
+        // 1. 白名单直接放行 (统一引用 AuthConstants.WHITE_LIST 单一真理源)
+        for (String pattern : AuthConstants.WHITE_LIST) {
             if (pathMatcher.match(pattern, uri)) {
                 filterChain.doFilter(request, response);
                 return;
@@ -203,6 +187,11 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String tokenHeader = request.getHeader(AuthConstants.HEADER_TOKEN);
         if (StrUtil.isNotBlank(tokenHeader)) {
             return tokenHeader.trim();
+        }
+        // 兼容原生 EventSource GET 流式接口（浏览器 EventSource 规范无法自定义 Header，支持通过 ?token= 传参认证）
+        String tokenParam = request.getParameter("token");
+        if (StrUtil.isNotBlank(tokenParam)) {
+            return tokenParam.trim();
         }
         return null;
     }

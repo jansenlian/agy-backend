@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.greatmap.agy.common.domain.Result;
 import com.greatmap.agy.common.exception.ErrorCode;
 import com.greatmap.agy.common.security.TokenAuthFilter;
+import com.greatmap.agy.common.constant.AuthConstants;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Spring Security 全局无状态与 Token 鉴权过滤器配置
+ * 遵循 Fail-Closed (默认拒绝) 安全设计原则：除明确声明的公开白名单外，全部请求默认必须认证
  * 开启 @EnableMethodSecurity 支持方法级 @PreAuthorize("@ss.hasPerm('...')") 强鉴权拦截
  */
 @Configuration
@@ -48,9 +50,17 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers(AuthConstants.WHITE_LIST).permitAll()
+                .anyRequest().authenticated()
             )
             .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                    Result<Void> errorResult = Result.error(ErrorCode.UNAUTHORIZED.getCode(), "尚未登录或登录凭证已失效，请重新登录");
+                    response.getWriter().write(JSONUtil.toJsonStr(errorResult));
+                })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
