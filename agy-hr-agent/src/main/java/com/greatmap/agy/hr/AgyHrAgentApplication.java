@@ -19,7 +19,7 @@ public class AgyHrAgentApplication {
         System.out.println("==================================================================");
         System.out.println("  AGY 智能人事与运维资产 Agent (Java 25 + Spring Boot 4.1.0) 启动成功！");
         System.out.println("  1. 智能问答接口: POST http://localhost:8090/api/agent/chat");
-        System.out.println("  2. SSE 打字机流: GET  http://localhost:8090/api/agent/chat/stream?message=xxx");
+        System.out.println("  2. SSE 打字机流: POST http://localhost:8090/api/agent/chat/stream");
         System.out.println("==================================================================");
     }
 }

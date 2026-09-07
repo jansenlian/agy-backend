@@ -381,9 +381,17 @@
         let accumulatedContent = '';
 
         try {
-            // 3. 发起 SSE 打字机流式请求
-            const url = `/api/agent/chat/stream?message=${encodeURIComponent(text)}&memoryId=web_user_session`;
-            const response = await fetch(url);
+            // 3. 发起 SSE 打字机流式请求 (统一标准 POST)
+            const response = await fetch('/api/agent/chat/stream', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: text,
+                    memoryId: 'web_user_session'
+                })
+            });
             
             if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`);

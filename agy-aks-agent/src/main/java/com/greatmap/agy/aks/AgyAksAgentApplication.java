@@ -19,7 +19,7 @@ public class AgyAksAgentApplication {
         System.out.println("==================================================================");
         System.out.println("  AGY AKS智慧耕地预警与驾驶舱智能体(Java 25+Spring Boot 4.1.0)启动成功!");
         System.out.println("  1. 智能问答接口: POST http://localhost:8092/api/agent/chat");
-        System.out.println("  2. SSE打字机流: GET  http://localhost:8092/api/agent/chat/stream?message=xxx");
+        System.out.println("  2. SSE打字机流: POST http://localhost:8092/api/agent/chat/stream");
         System.out.println("  3. 核心工具集: YjAgentTools(预警诊断) + FarmlandStatAgentTools(大盘统计)");
         System.out.println("==================================================================");
     }

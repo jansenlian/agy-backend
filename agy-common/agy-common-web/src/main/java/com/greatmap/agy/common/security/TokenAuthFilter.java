@@ -188,11 +188,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         if (StrUtil.isNotBlank(tokenHeader)) {
             return tokenHeader.trim();
         }
-        // 兼容原生 EventSource GET 流式接口（浏览器 EventSource 规范无法自定义 Header，支持通过 ?token= 传参认证）
-        String tokenParam = request.getParameter("token");
-        if (StrUtil.isNotBlank(tokenParam)) {
-            return tokenParam.trim();
-        }
         return null;
     }
 
