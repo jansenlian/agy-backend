@@ -108,6 +108,16 @@ public class EmployeeProfile implements Serializable {
     private String birthDate;
 
     /**
+     * 家乡/籍贯
+     */
+    private String hometown;
+
+    /**
+     * 前分组
+     */
+    private String previousGroup;
+
+    /**
      * 月度底薪 (真值/合同底薪)
      */
     private java.math.BigDecimal monthSalaryRate;
