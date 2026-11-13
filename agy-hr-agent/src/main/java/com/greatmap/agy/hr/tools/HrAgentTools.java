@@ -18,7 +18,7 @@ public class HrAgentTools {
 
     private final HrAgentService hrAgentService;
 
-    @Tool("根据员工姓名或工号，精确查询员工 360° 全景档案（包括工号、姓名、部门、职位、入职时间、毕业院校、专业、学历、职称、产品组、参与项目列表、现住址、年龄、出生日期、身份证号、家乡、前分组）")
+    @Tool("根据员工姓名或工号，精确查询员工 360° 全景档案（包括工号、姓名、部门、工作区域、职位、入职时间、毕业院校、专业、学历、职称、产品组、参与项目列表、现住址、年龄、出生日期、身份证号、家乡、前分组）")
     public String queryEmployeeProfile(
             @P("员工姓名或工号，如：王健、周绍涛、184、1") String nameOrId) {
         log.info(">>> [Agent Tool 触发] 查询员工档案: {}", nameOrId);

@@ -4,7 +4,7 @@
 
     <!-- 根据姓名或工号精确查询员工档案 -->
     <select id="findByNameOrId" resultType="com.greatmap.agy.hr.entity.EmployeeProfile">
-        SELECT emp_id, emp_name, department, position, entry_date, graduation_date,
+        SELECT emp_id, emp_name, department, region, position, entry_date, graduation_date,
                education, school, major, professional_title, product_group, projects,
                residence, computer_subsidy, age, id_card, birth_date, hometown, previous_group, month_salary_rate, day_rate
         FROM employee_profile
@@ -14,7 +14,7 @@
 
     <!-- 模糊搜索员工档案 -->
     <select id="fuzzySearch" resultType="com.greatmap.agy.hr.entity.EmployeeProfile">
-        SELECT emp_id, emp_name, department, position, entry_date, graduation_date,
+        SELECT emp_id, emp_name, department, region, position, entry_date, graduation_date,
                education, school, major, professional_title, product_group, projects,
                residence, computer_subsidy, age, id_card, birth_date, hometown, previous_group, month_salary_rate, day_rate
         FROM employee_profile

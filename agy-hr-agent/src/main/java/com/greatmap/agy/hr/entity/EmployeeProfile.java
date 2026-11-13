@@ -38,6 +38,11 @@ public class EmployeeProfile implements Serializable {
     private String department;
 
     /**
+     * 区域/工作地点
+     */
+    private String region;
+
+    /**
      * 岗位/职务
      */
     private String position;
