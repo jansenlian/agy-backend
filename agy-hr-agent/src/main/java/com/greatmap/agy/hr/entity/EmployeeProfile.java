@@ -93,6 +93,21 @@ public class EmployeeProfile implements Serializable {
     private String computerSubsidy;
 
     /**
+     * 年龄
+     */
+    private Integer age;
+
+    /**
+     * 身份证号
+     */
+    private String idCard;
+
+    /**
+     * 出生日期 (YYYY-MM-DD)
+     */
+    private String birthDate;
+
+    /**
      * 月度底薪 (真值/合同底薪)
      */
     private java.math.BigDecimal monthSalaryRate;
